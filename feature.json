@@ -1,0 +1,33 @@
+{
+  "version": "2",
+  "feature": {
+    "name": "Todo App",
+    "prd_file": "./docs/todo-prd.md",
+    "repo_root": ".",
+    "tech_stack": {
+      "frontend": "React + TypeScript",
+      "backend": "Node.js + Express",
+      "database": "PostgreSQL",
+      "testing": "Jest",
+      "infra": "Docker"
+    },
+    "output_dir": "./.codex-output"
+  },
+  "sdlc": {
+    "model": "claude-sonnet-4-20250514",
+    "timeout_seconds": 600,
+    "agents": {
+      "architecture": { "wave": 1 },
+      "api-contracts": { "wave": 1 },
+      "db-schema": { "wave": 1 },
+
+      "backend": { "wave": 2 },
+      "frontend": { "wave": 2 },
+      "devops": { "wave": 2 },
+
+      "unit-tests": { "wave": 3 },
+      "integration-tests": { "wave": 3 },
+      "docs": { "wave": 3 }
+    }
+  }
+}
