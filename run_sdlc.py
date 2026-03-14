@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Codex SDLC Orchestrator
+SDLC Orchestrator
 Reads feature.json and runs SDLC agents in 3 parallel waves:
   Wave 1 — Design (architecture, api-contracts, db-schema)
   Wave 2 — Implement (backend, frontend, devops)
@@ -289,7 +289,7 @@ def main():
 
     prd = load_prd(cfg)
     repo_root = Path(cfg["_config_dir"]) / feature.get("repo_root", ".")
-    output_dir = Path(cfg["_config_dir"]) / feature.get("output_dir", ".codex-output")
+    output_dir = Path(cfg["_config_dir"]) / feature.get("output_dir", ".sdlc-output")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Filter agents

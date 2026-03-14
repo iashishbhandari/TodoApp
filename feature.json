@@ -11,7 +11,7 @@
       "testing": "Jest",
       "infra": "Docker"
     },
-    "output_dir": "./.codex-output"
+    "output_dir": "./.sdlc-output"
   },
   "sdlc": {
     "model": "claude-sonnet-4-20250514",
