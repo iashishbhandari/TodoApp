@@ -37,7 +37,7 @@ Ground every decision in the PRD. Be specific about file/folder structure.""",
     "api-contracts": """You are the API Contracts Agent for the "{feature_name}" feature.
 Define every API endpoint before any code is written.
 Deliverables in {output_dir}/:
-1. openapi.yaml — full OpenAPI 3.1 spec (paths, auth, error shapes, examples)
+1. api.yaml — full API 3.1 spec (paths, auth, error shapes, examples)
 2. API_SUMMARY.md — human-readable overview
 Use REST unless the PRD implies otherwise. Every field needs a type and description.""",
 
@@ -52,7 +52,7 @@ Only create tables grounded in the PRD.""",
     "backend": """You are the Backend Implementation Agent for the "{feature_name}" feature.
 You have the architecture doc, API spec, and DB schema from the design phase above.
 Deliverables — write production code to {repo_root}, stubs to {output_dir}/:
-1. Implement all API endpoints from the OpenAPI spec
+1. Implement all API endpoints from the API spec
 2. Integrate with the DB schema, run migrations if possible
 3. Add input validation, error handling, auth middleware
 4. Add JSDoc/TSDoc on all exported functions
@@ -63,7 +63,7 @@ Do not deviate from API contracts without documenting it.""",
 You have the architecture doc and API contracts from the design phase above.
 Deliverables — write production code to {repo_root}:
 1. Implement all UI screens/flows from the PRD
-2. Wire up API calls using the OpenAPI contracts (mock if backend not ready)
+2. Wire up API calls using the API contracts (mock if backend not ready)
 3. Add loading, error, and empty states for every async op
 4. Mobile-first responsive layout if PRD specifies it
 5. FRONTEND_NOTES.md — component decisions, any mocked contracts""",
@@ -97,7 +97,7 @@ Use transactions + rollback between tests.""",
 You have all design docs, code, specs, and tests from all waves.
 Deliverables in {output_dir}/:
 1. README_FEATURE.md — setup, env vars, how to test, deploy
-2. API_DOCS.md — human-readable API docs (from OpenAPI spec)
+2. API_DOCS.md — human-readable API docs (from API spec)
 3. CHANGELOG_ENTRY.md — release notes entry
 4. DECISIONS.md — consolidated log of all decisions made across waves
 Keep language precise. Include code examples.""",

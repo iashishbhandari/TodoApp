@@ -11,7 +11,7 @@
 ```
 Wave 1 — Design        (parallel)
   ├── Architecture      → system design, component diagrams, ADRs
-  ├── API Contracts     → full OpenAPI 3.1 spec
+  ├── API Contracts     → full API 3.1 spec
   └── DB Schema         → Prisma/SQL schema + migrations
 
 Wave 2 — Implement     (parallel, receives Wave 1 outputs)
@@ -56,7 +56,7 @@ unzip sdlc-multiagent.skill -d ~/.claude/skills/sdlc-multiagent
 {
   "version": "2",
   "feature": {
-    "name": "Todo API",
+    "name": "Todo App",
     "prd_file": "./docs/prd.md",
     "repo_root": ".",
     "tech_stack": {
@@ -113,7 +113,7 @@ Everything lands in `.sdlc-output/` (configurable via `output_dir`):
 ```
 .sdlc-output/
 ├── architecture/         → ARCHITECTURE.md, TECH_DECISIONS.md
-├── api-contracts/        → openapi.yaml, API_SUMMARY.md
+├── api-contracts/        → api.yaml, API_SUMMARY.md
 ├── db-schema/            → schema.prisma, migrations/001_init.sql
 ├── backend/              → BACKEND_NOTES.md  (+ code → repo root)
 ├── frontend/             → FRONTEND_NOTES.md (+ code → repo root)
@@ -150,7 +150,7 @@ python run_sdlc.py feature.json --dry-run
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  SDLC RUN: Todo API  (3 waves, 9 agents)
+  SDLC RUN: Todo App  (3 waves, 9 agents)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   WAVE 1 — Design
