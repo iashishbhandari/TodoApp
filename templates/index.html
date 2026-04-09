@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TodoApp</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --gh-canvas-default: #ffffff;
+      --gh-canvas-subtle: #f6f8fa;
+      --gh-canvas-inset: #f3f4f6;
+      --gh-fg-default: #1f2328;
+      --gh-fg-muted: #59636e;
+      --gh-border-default: #d0d7de;
+      --gh-border-muted: #d8dee4;
+      --gh-accent-emphasis: #2da44e;
+      --gh-accent-muted: #dafbe1;
+      --gh-attention-fg: #9a6700;
+      --gh-attention-muted: #fff8c5;
+      --gh-danger-fg: #cf222e;
+      --gh-danger-muted: #ffebe9;
+      --gh-done-fg: #8250df;
+      --gh-shadow-small: 0 1px 0 rgba(31, 35, 40, 0.04);
+      --gh-shadow-medium: 0 8px 24px rgba(140, 149, 159, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      color: var(--gh-fg-default);
+      background:
+        linear-gradient(180deg, rgba(9, 105, 218, 0.06), transparent 16rem),
+        var(--gh-canvas-subtle);
+    }
+
+    a {
+      color: #0969da;
+      text-decoration: none;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem;
+    }
+
+    .shell {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .repo-bar,
+    .panel,
+    .task-card {
+      background: var(--gh-canvas-default);
+      border: 1px solid var(--gh-border-default);
+      border-radius: 6px;
+      box-shadow: var(--gh-shadow-small);
+    }
+
+    .repo-bar {
+      padding: 1rem 1.25rem;
+    }
+
+    .repo-path {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      flex-wrap: wrap;
+    }
+
+    .repo-path .owner {
+      color: #0969da;
+    }
+
+    .repo-path .repo {
+      color: var(--gh-fg-default);
+    }
+
+    .repo-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      color: var(--gh-fg-muted);
+      font-size: 0.875rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--gh-border-default);
+      background: var(--gh-canvas-subtle);
+      font-weight: 500;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(280px, 0.9fr);
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--gh-border-muted);
+    }
+
+    .panel-header h1,
+    .panel-header h2,
+    .panel-header h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .panel-body {
+      padding: 1rem 1.25rem 1.25rem;
+    }
+
+    .messages {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--gh-border-default);
+      font-size: 0.9375rem;
+    }
+
+    .message.success {
+      color: #1a7f37;
+      background: var(--gh-accent-muted);
+      border-color: rgba(42, 122, 57, 0.2);
+    }
+
+    .message.error {
+      color: var(--gh-danger-fg);
+      background: var(--gh-danger-muted);
+      border-color: rgba(207, 34, 46, 0.18);
+    }
+
+    form.add-task {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    label {
+      display: grid;
+      gap: 0.45rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    button {
+      font: inherit;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 2rem;
+      padding: 0.4rem 0.75rem;
+      border: 1px solid var(--gh-border-default);
+      border-radius: 6px;
+      background: var(--gh-canvas-default);
+      color: var(--gh-fg-default);
+      box-shadow: inset 0 1px 0 rgba(208, 215, 222, 0.2);
+    }
+
+    input:focus,
+    select:focus,
+    button:focus {
+      outline: 2px solid rgba(9, 105, 218, 0.3);
+      outline-offset: 1px;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .helper {
+      margin: 0;
+      color: var(--gh-fg-muted);
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      min-height: 2rem;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid rgba(31, 35, 40, 0.15);
+      border-radius: 6px;
+      background: linear-gradient(180deg, #f6f8fa, #eef1f4);
+      color: var(--gh-fg-default);
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: var(--gh-shadow-small);
+    }
+
+    .btn:hover {
+      background: linear-gradient(180deg, #f3f4f6, #e8ebef);
+    }
+
+    .btn-primary {
+      border-color: rgba(31, 35, 40, 0.15);
+      background: linear-gradient(180deg, #2da44e, #218b3a);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(180deg, #2c974b, #1f7a35);
+    }
+
+    .btn-danger {
+      color: var(--gh-danger-fg);
+      background: linear-gradient(180deg, #fff8f8, #fff1f0);
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(180deg, #ffefef, #ffe5e3);
+    }
+
+    .task-list {
+      display: grid;
+    }
+
+    .task-card {
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
+      box-shadow: none;
+      padding: 1rem 1.25rem;
+    }
+
+    .task-card:first-child {
+      border-top: 0;
+    }
+
+    .task-card:last-child {
+      border-bottom: 0;
+    }
+
+    .task-card.done .task-title {
+      color: var(--gh-fg-muted);
+      text-decoration: line-through;
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: start;
+      margin-bottom: 0.75rem;
+    }
+
+    .task-title {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .task-status {
+      flex-shrink: 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--gh-border-default);
+      background: var(--gh-canvas-subtle);
+      color: var(--gh-fg-muted);
+    }
+
+    .task-status.done {
+      color: var(--gh-done-fg);
+      background: rgba(130, 80, 223, 0.1);
+      border-color: rgba(130, 80, 223, 0.2);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      color: var(--gh-fg-muted);
+      font-size: 0.875rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .badge.priority-high {
+      color: #a40e26;
+      background: #ffebe9;
+      border-color: rgba(207, 34, 46, 0.12);
+    }
+
+    .badge.priority-medium {
+      color: #9a6700;
+      background: #fff8c5;
+      border-color: rgba(154, 103, 0, 0.15);
+    }
+
+    .badge.priority-low {
+      color: #1a7f37;
+      background: #dafbe1;
+      border-color: rgba(26, 127, 55, 0.15);
+    }
+
+    .badge.warn {
+      color: var(--gh-attention-fg);
+      background: var(--gh-attention-muted);
+      border-color: rgba(154, 103, 0, 0.16);
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .actions form {
+      margin: 0;
+    }
+
+    .empty {
+      margin: 0;
+      color: var(--gh-fg-muted);
+    }
+
+    .stats {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .stat {
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--gh-border-muted);
+      border-radius: 6px;
+      background: var(--gh-canvas-subtle);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat span {
+      color: var(--gh-fg-muted);
+      font-size: 0.875rem;
+    }
+
+    .legend {
+      margin: 1rem 0 0;
+      padding-left: 1rem;
+      color: var(--gh-fg-muted);
+      font-size: 0.875rem;
+    }
+
+    .legend li + li {
+      margin-top: 0.45rem;
+    }
+
+    @media (max-width: 860px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding: 1rem 0.75rem 2rem;
+      }
+
+      .panel-header,
+      .panel-body,
+      .task-card,
+      .repo-bar {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .task-header,
+      .button-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .task-status {
+        align-self: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="shell">
+      <section class="repo-bar">
+        <div class="repo-path">
+          <span class="owner">ashish</span>
+          <span>/</span>
+          <span class="repo">TodoApp</span>
+        </div>
+        <div class="repo-meta">
+          <span class="pill">Issues 0</span>
+          <span class="pill">Pull requests 0</span>
+          <span class="pill">Projects Personal board</span>
+        </div>
+      </section>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <section class="messages">
+            {% for category, message in messages %}
+              <div class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </section>
+        {% endif %}
+      {% endwith %}
+
+      <div class="content-grid">
+        <section class="panel">
+          <div class="panel-header">
+            <h1>Open Tasks</h1>
+            <span class="pill">{{ task_rows|length }} tracked</span>
+          </div>
+
+          <div class="panel-body">
+            <form class="add-task" method="post" action="{{ url_for('create_task') }}">
+              <div class="form-grid">
+                <label>
+                  Title
+                  <input type="text" name="title" placeholder="Ship release notes" required>
+                </label>
+                <label>
+                  Deadline
+                  <input type="date" name="deadline" required>
+                </label>
+                <label>
+                  Priority
+                  <select name="priority" required>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low" selected>Low</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="button-row">
+                <p class="helper">Create, review, and close tasks from one page with a GitHub-inspired layout.</p>
+                <button class="btn btn-primary" type="submit">New issue</button>
+              </div>
+            </form>
+          </div>
+
+          {% if task_rows %}
+            <div class="task-list">
+              {% for row in task_rows %}
+                <article class="task-card {% if row.task.done %}done{% endif %}">
+                  <div class="task-header">
+                    <div>
+                      <h2 class="task-title">{{ row.task.title }}</h2>
+                    </div>
+                    <span class="task-status {% if row.task.done %}done{% endif %}">
+                      {% if row.task.done %}Closed{% else %}Open{% endif %}
+                    </span>
+                  </div>
+
+                  <div class="meta">
+                    <span>Deadline: {{ row.task.deadline }}</span>
+                    <span class="badge priority-{{ row.task.priority.lower() }}">{{ row.task.priority }}</span>
+                    {% if row.is_overdue %}
+                      <span class="badge warn">OVERDUE</span>
+                    {% endif %}
+                  </div>
+
+                  <div class="actions">
+                    {% if not row.task.done %}
+                      <form method="post" action="{{ url_for('mark_done', task_id=row.task.id) }}">
+                        <button class="btn" type="submit">Close issue</button>
+                      </form>
+                    {% endif %}
+                    <form method="post" action="{{ url_for('delete_task', task_id=row.task.id) }}">
+                      <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="panel-body">
+              <p class="empty">No tasks yet. Create your first issue above to start tracking work.</p>
+            </div>
+          {% endif %}
+        </section>
+
+        <aside class="panel">
+          <div class="panel-header">
+            <h2>Repository Summary</h2>
+          </div>
+          <div class="panel-body">
+            <div class="stats">
+              <div class="stat">
+                <strong>{{ task_rows|length }}</strong>
+                <span>Total items in the queue</span>
+              </div>
+              <div class="stat">
+                <strong>{{ task_rows | selectattr('task.done') | list | length }}</strong>
+                <span>Closed tasks</span>
+              </div>
+              <div class="stat">
+                <strong>{{ task_rows | rejectattr('task.done') | list | length }}</strong>
+                <span>Open tasks</span>
+              </div>
+            </div>
+
+            <ul class="legend">
+              <li><strong>High</strong> tasks appear first in the list.</li>
+              <li><strong>Open</strong> tasks stay ahead of closed ones within each priority.</li>
+              <li><strong>Overdue</strong> items are highlighted so they stand out quickly.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
